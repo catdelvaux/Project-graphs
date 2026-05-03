@@ -17,17 +17,16 @@ def betweenness_centrality(df, station):
         distances, prev = dijkstra(source, graph)
         for destination in graph:
             if destination != source:
-                path =[]
                 current = destination
                 while current != source:
                     if current is None:
                         break
-                    path.append(current)
+                    if current != destination:
+                        if current == station:
+                            count += 1
                     current = prev[current]
-                if station in path[1:]:
-                    count+=1
 
-    return count
+    return count // 2
 
 #helpers
 def build_graph(df):
@@ -76,14 +75,15 @@ def all_betweenness(df):
         distances, prev = dijkstra(source, graph)
         for destination in graph:
             if destination != source:
-                current = destination
-                while current != source:
-                    if current is None:
-                        break
-                    if current != destination:
-                        counts[current] += 1
-                    current = prev[current]
-    
+                if destination > source:  
+                    current = destination
+                    while current != source:
+                        if current is None:
+                            break
+                        if current != destination:
+                            counts[current] += 1
+                        current = prev[current]
+        
     return counts
 
 def find_max(df):
